@@ -45,7 +45,7 @@ export let registerUser = async(req , res)=>{
         email : user.email,
         phone : user.phone ,
         address : user.address ,
-        token : generateToken(loginUser._id)
+        token : generateToken(user._id)
        
     })
 
@@ -80,11 +80,22 @@ export let loginUser = async(req , res)=>{
 
 }
 
+//private Controller
+
+let privateAccess = (req , res)=>{
+    console.log(req.user);
+    
+    res.json({
+        message : `request is made by : ${req?.user?.name}`
+    })
+
+}
+
 let generateToken = (id)=>{
-    let token = jwt.sign({id} , process.env.JWT_SECRETE , {expiresIn : '30d'})
+    let token = jwt.sign({id} , process.env.JWT_SECRET , {expiresIn : '30d'})
     return token
 }
 
-let authControllers = {registerUser , loginUser}
+let authControllers = {registerUser , loginUser , privateAccess}
 
 export default authControllers
